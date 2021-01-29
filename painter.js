@@ -6,7 +6,6 @@ function createPainter(parent, width, height) {
     for(var name in controls) {
         toolbar.appendChild(controls[name](ctx));
     }
-ㄹㅇㄴㅁㄹㅇㅁㄹㅇㄴㅁ
     toolbar.style.fontSize = "small";
     toolbar.style.marginBottom = "3px";
 
