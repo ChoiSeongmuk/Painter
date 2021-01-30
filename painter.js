@@ -33,7 +33,20 @@ function relativePosition(event, element) {
     return {x: Math.floor(event.clientX - rect.left),
             y: Math.floor(event.clientY - rect.top)};
 }
+function loadImageURL(ctx, url) {
+    var image = document.createElement("img");
+    image.onload = function () {
+        var factor = Math.min(ctx.canvas.width/this.width, ctx.canvas.height/this.height);
+        var wshift = (ctx.canvas.width - factor*this.width)/2;
+        var hshift = (ctx.canvas.height - factor*this.height)/2;
 
+        ctx.fillStyle = "white";
+        ctx.fillRect(0,0, ctx.canvas.width, ctx.canvas.height);
+        ctx.drawImage(image, 0, 0,
+            this.width, this.height, wshift, hshift, this.width*factor, this.height*factor);
+    }
+    image.src = url;
+}
 // Tools
 
 var paintTool;
@@ -192,4 +205,30 @@ controls.color = function(ctx) {
 
     return label;
 }
+controls.save = function(ctx) {
+    var input = elt("input", {type: "button", value: "저장"});
+    var label = elt("label", null, " ", input);
+
+    input.addEventListener("click", function(e) {
+        var dataURL = ctx.canvas.toDataURL;
+        open(dataURL, "save");
+    },false);
+    return label;
+}
+
+controls.file = function(ctx) {
+    var input = elt("input", {type:"file"});
+    var label = elt("label",null," ", input);
+
+    input.addEventListener("change", function(e) {
+        if(input.files.length == 0) return;
+        var reader = new FileReader();
+        reader.onload = function() {
+            loadImageURL(ctx,reader.result);
+        };
+        reader.readAsDataURL(input.files[0]);
+    },false);
+    return label;
+}
+
 
