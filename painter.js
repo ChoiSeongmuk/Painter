@@ -47,6 +47,16 @@ function loadImageURL(ctx, url) {
     }
     image.src = url;
 }
+function downloadImageURI(uri, name) {
+    var link = document.createElement("a");
+    link.download = name;
+    link.href = uri;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    delete link;
+  }
+
 // Tools
 
 var paintTool;
@@ -192,7 +202,7 @@ controls.alpha = function(ctx) {
         ctx.globalAlpha = this.value;
     }, false);
     return label;
-}
+};
 
 controls.color = function(ctx) {
     var input = elt("input", {type: "color", value: "#000000"});
@@ -204,17 +214,18 @@ controls.color = function(ctx) {
     }, false);
 
     return label;
-}
+};
 controls.save = function(ctx) {
     var input = elt("input", {type: "button", value: "저장"});
     var label = elt("label", null, " ", input);
 
     input.addEventListener("click", function(e) {
-        var dataURL = ctx.canvas.toDataURL;
-        open(dataURL, "save");
+        var dataURL = ctx.canvas.toDataURL();
+        downloadImageURI(dataURL, "images");
     },false);
     return label;
-}
+    
+};
 
 controls.file = function(ctx) {
     var input = elt("input", {type:"file"});
@@ -229,6 +240,6 @@ controls.file = function(ctx) {
         reader.readAsDataURL(input.files[0]);
     },false);
     return label;
-}
+};
 
 
